@@ -1,46 +1,23 @@
 import string
 from alphabet_detector import AlphabetDetector
 import random
+
 ad = AlphabetDetector()
 
 
-class Alphabets(str):
+class Cases():
     def __init__(self):
-        super(Alphabets, self).__init__()
         self.characters = string.ascii_letters
-        self.punctuations = string.punctuation
-        self.digits = string.digits
-        self.oc_digits = string.octdigits
 
-    def __repr__(self):
-        return '<Alphabets characters:%s>' % self.characters
-
-    def __next__(self):
-        pass
-
-    def __get__(self, instance, owner):
-        pass
-
-    def __iter__(self):
-        pass
-
-    def random(self, count, case):
-        """
-        Generate
-        :return:
-        """
-        keylist = [random.choice(self.characters) for letter in range(count)]
-        return "".join(keylist)
-
-a = Alphabets()
-print(a.random(count=5))
-
-class Cases(Alphabets):
-    def __init__(self):
-        super().__init__()
-
-    def customCase(self):
-        pass
+    def getCase(self, case_string, characters):
+        if case_string == "titleCase":
+            return self.titleCase(characters)
+        if case_string == "lowerCase":
+            return self.lowerCase(characters)
+        if case_string == "sentenceCase":
+            return self.sentenceCase(characters)
+        if case_string == "camelCase":
+            return self.camelCase(characters)
 
     def capitalize(self, characters=None):
         """
@@ -68,7 +45,8 @@ class Cases(Alphabets):
             else:
                 return "{0}.".format(characters.title())
         else:
-            return "{0}.".format(characters.title()) if not characters.endswith('.') else "{0}".format(characters.title())
+            return "{0}.".format(characters.title()) if not characters.endswith('.') else "{0}".format(
+                characters.title())
 
     def lowerCase(self, characters=None):
         """
@@ -98,7 +76,37 @@ class Cases(Alphabets):
             return ''.join(word for word in self.characters.title() if not word.isspace())
 
 
+class Alphabets(str, Cases):
+    def __init__(self):
+        super(Alphabets, self).__init__()
+        self.characters = string.ascii_letters
+        self.punctuations = string.punctuation
+        self.digits = string.digits
+        self.oc_digits = string.octdigits
 
-test = Cases()
-# test.characters= "my name is adedeji"
-print(test.camelCase())
+    def __repr__(self):
+        return '<Alphabets characters:%s>' % self.characters
+
+    def __next__(self):
+        pass
+
+    def __get__(self, instance, owner):
+        pass
+
+    def __iter__(self):
+        pass
+
+    def random(self, count, use_case=None):
+        """
+        Generate
+        :return:
+        """
+        output = [random.choice(self.characters) for letter in range(count)]
+        if not use_case:
+            return output
+        else:
+            return self.getCase(use_case, "".join(output))
+
+
+a = Alphabets()
+print(a.random(count=5))
