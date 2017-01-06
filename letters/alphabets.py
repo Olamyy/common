@@ -1,6 +1,6 @@
 import string
 from alphabet_detector import AlphabetDetector
-import re
+import random
 ad = AlphabetDetector()
 
 
@@ -24,10 +24,20 @@ class Alphabets(str):
     def __iter__(self):
         pass
 
+    def random(self, count, case):
+        """
+        Generate
+        :return:
+        """
+        keylist = [random.choice(self.characters) for letter in range(count)]
+        return "".join(keylist)
 
-class Cases:
+a = Alphabets()
+print(a.random(count=5))
+
+class Cases(Alphabets):
     def __init__(self):
-        self.characters = string.ascii_letters
+        super().__init__()
 
     def customCase(self):
         pass
@@ -83,11 +93,12 @@ class Cases:
     def camelCase(self, characters=None):
         if not characters:
             characters = self.characters
-            for word in characters.split():
-                words = re.sub('[\s+]', '', characters)
-                return word, words
+            return ''.join(word for word in characters.title() if not word.isspace())
+        else:
+            return ''.join(word for word in self.characters.title() if not word.isspace())
+
 
 
 test = Cases()
-test.characters= "my nam   e is   adedeji"
+# test.characters= "my name is adedeji"
 print(test.camelCase())
