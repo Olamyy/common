@@ -1,6 +1,6 @@
 import string
 from alphabet_detector import AlphabetDetector
-
+import re
 ad = AlphabetDetector()
 
 
@@ -24,13 +24,6 @@ class Alphabets(str):
     def __iter__(self):
         pass
 
-    def uppercase(self):
-        """
-        Return the characters in uppercase
-        :return:
-        """
-        return self.characters.upper()
-
 
 class Cases:
     def __init__(self):
@@ -51,19 +44,23 @@ class Cases:
         else:
             return self.characters.capitalize()
 
-    def titlecase(self, characters=None):
+    def titleCase(self, characters=None, sentence=False):
         """
 
+        :param sentence:
         :param characters:
         :return:
         """
-        if not characters:
+        if not characters and not sentence:
             characters = self.characters
-            return characters.title()
+            if characters.endswith("."):
+                return characters.title().replace('.', '')
+            else:
+                return "{0}.".format(characters.title())
         else:
-            return self.characters.title()
+            return "{0}.".format(characters.title()) if not characters.endswith('.') else "{0}".format(characters.title())
 
-    def lowercase(self, characters=None):
+    def lowerCase(self, characters=None):
         """
 
         :param characters:
@@ -79,11 +76,18 @@ class Cases:
         if not characters:
             characters = self.characters
             if characters.endswith("."):
-                return characters.replace(characters[0], characters[0].upper(), 1)
+                return characters.capitalize()
             else:
-                return characters.replace(characters[0], characters[0].upper()).replace(characters[-1], (characters[-1]
-                                                                                                         + '.'), 1)
+                return "{0}.".format(characters.capitalize())
+
+    def camelCase(self, characters=None):
+        if not characters:
+            characters = self.characters
+            for word in characters.split():
+                words = re.sub('[\s+]', '', characters)
+                return word, words
+
 
 test = Cases()
-test.characters= "my name is adedeji"
-print(test.sentenceCase())
+test.characters= "my nam   e is   adedeji"
+print(test.camelCase())
